@@ -28,7 +28,7 @@ public interface UserMapper {
     public List<Map> getUserByAccount(@Param("account")String account);
 
     //保存用户
-    @Insert("insert into teach_admin(account, password, name, role) values(#{account}, #{password}, #{name}, #{role})")
+    @Insert("insert into teach_admin(account, password, name, role,college_id) values(#{account}, #{password}, #{name}, #{role},#{college_id})")
     @Options(useGeneratedKeys=true, keyProperty="id",keyColumn="id")
     public int save(User user);
 
@@ -44,9 +44,6 @@ public interface UserMapper {
     @Select("SELECT * FROM teach_course a LEFT JOIN (SELECT admin_id, course_id FROM teach_admin_course WHERE admin_id =#{user_id}) b ON a.id = b.course_id ORDER BY a.id DESC")
     public List<Map> getCourseList(@Param("user_id")String user_id);
 
-    //通过用户id删除用户关联课程信息
-    @Delete("delete from teach_admin_course where admin_id = #{user_id}")
-    public void userCourseDelete(@Param("user_id") String user_id);
 
     //保存用户关联课程信息
     @Insert("insert into teach_admin_course(admin_id, course_id) values(#{user_id}, #{course_id})")

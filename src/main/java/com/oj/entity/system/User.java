@@ -17,6 +17,26 @@ public class User {
     //用户角色
     private String role;
 
+    private String college_id;
+
+    private String class_id;
+
+    public String getCollege_id() {
+        return college_id;
+    }
+
+    public void setCollege_id(String college_id) {
+        this.college_id = college_id;
+    }
+
+    public String getClass_id() {
+        return class_id;
+    }
+
+    public void setClass_id(String class_id) {
+        this.class_id = class_id;
+    }
+
     public String getId() {
         return id;
     }

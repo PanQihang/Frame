@@ -16,22 +16,40 @@ public class UserProvider {
     public String getQuerySql(Map<String, Object> params){
         Map<String, String> info = (Map<String, String>)params.get("condition");
         StringBuffer sql = new StringBuffer();
-        sql.append(" SELECT ( @i := @i + 1 ) AS num,t1.* ");
-        sql.append(" FROM( SELECT a.id, a.account, a.`name`, ");
-        sql.append(" a.role, b.role_name ");
-        sql.append(" FROM teach_admin a LEFT JOIN teach_back_role b ON a.role = b.id ");
-        sql.append(" WHERE a.role != '32' ");
+        sql.append(" SELECT\n" +
+                "\t(@i := @i + 1) AS num,\n" +
+                "\tt1.*\n" +
+                "FROM\n" +
+                "\t(\n" +
+                "SELECT\n" +
+                "teach_admin.id,\n" +
+                "teach_admin.account,\n" +
+                "teach_admin.`name`,\n" +
+                "teach_admin.role,\n" +
+                "teach_back_role.role_name,\n" +
+                "teach_college.`name` as college_name\n" +
+                "FROM\n" +
+                "teach_admin ,\n" +
+                "teach_back_role ,\n" +
+                "teach_college\n" +
+                "WHERE\n" +
+                "teach_admin.role != '32' AND \n" +
+                "teach_admin.role = teach_back_role.id AND\n" +
+                "teach_admin.college_id = teach_college.college_id");
         if (!StringUtils.isEmpty(info.get("id"))){
-            sql.append(" AND a.id = '"+info.get("id")+"' ");
+            sql.append(" AND teach_admin.id = '"+info.get("id")+"' ");
         }
         if (!StringUtils.isEmpty(info.get("account"))){
-            sql.append(" AND a.account like '%"+info.get("account")+"%' ");
+            sql.append(" AND teach_admin.account like '%"+info.get("account")+"%' ");
         }
         if (!StringUtils.isEmpty(info.get("name"))){
-            sql.append(" AND a.name like '%"+info.get("name")+"%' ");
+            sql.append(" AND teach_admin.name like '%"+info.get("name")+"%' ");
         }
         if (!StringUtils.isEmpty(info.get("role"))){
-            sql.append(" AND a.role = '"+info.get("role")+"' ");
+            sql.append(" AND teach_admin.role = '"+info.get("role")+"' ");
+        }
+        if (!StringUtils.isEmpty(info.get("college_id"))){
+            sql.append(" AND teach_admin.college_id = '"+info.get("college_id")+"' ");
         }
         sql.append(" ) t1,( SELECT @i := 0 ) t2 ");
         log.info(sql.toString());

@@ -75,8 +75,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void userDelete(String id) {
-        //在删除用户之前应该先对其关联的课程信息进行解绑
-        mapper.userCourseDelete(id);
         //解绑成功之后，再进行用户删除操作
         mapper.userDelete(id);
     }
@@ -100,8 +98,6 @@ public class UserServiceImpl implements UserService {
     public void saveCourseList(Map<String, Object> param) {
         String user_id = param.get("user_id").toString();
         List<String> course_list = (List<String>)param.get("course_list");
-        //现解除用户的全部课程绑定
-        mapper.userCourseDelete(user_id);
         //重新对用户的课程进行绑定
         for (String course_id : course_list){
             mapper.saveCourseList(user_id, course_id);

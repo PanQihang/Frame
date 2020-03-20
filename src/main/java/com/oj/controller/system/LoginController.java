@@ -52,6 +52,8 @@ public class LoginController {
             request.getSession().setAttribute("user_id",userList.get(0).get("id"));
             request.getSession().setAttribute("user_name",userList.get(0).get("name"));
             request.getSession().setAttribute("user_account",userList.get(0).get("account"));
+            request.getSession().setAttribute("user_college_id",userList.get(0).get("college_id"));
+            request.getSession().setAttribute("user_class_id",userList.get(0).get("class_id"));
             request.getSession().setAttribute("user_role", user_role);
             request.getSession().setAttribute("user_auth", authService.getAuthListByRole(user_role));
             log.info("IP为："+LogUtil.getIpAddr(request) +",用户登录名为："+userList.get(0).get("account")+"的用户登入成功");
