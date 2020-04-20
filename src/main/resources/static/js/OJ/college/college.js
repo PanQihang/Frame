@@ -69,7 +69,6 @@ function showEditCollege(id) {
                 "id" : id
             }),
             success:function (result){
-                //alert(JSON.stringify(result));
                 $("#dialogCollegeName").val(result[0].name);
             }
         })

@@ -99,7 +99,6 @@ public class StudentServiceImpl implements StudentService {
         String result=null;
         Map map = mapper.getTheClassIdByName(className);
         result=""+map.get("id");
-        System.out.println("#:"+result);
         return result;
     }
 }

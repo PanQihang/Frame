@@ -40,6 +40,14 @@ public class StudentController {
     @PostMapping("/getTargetStudentList")
     @ResponseBody
     public List<Map> getTargetStudentList(@RequestBody Map<String, String> param, HttpServletRequest request){
+        String college_id = request.getSession().getAttribute("user_college_id").toString();
+        if(param.get("college_id")==null||param.get("college_id").equals(""))
+        {
+            if(!college_id.equals("0"))
+            {
+                param.put("college_id",college_id);
+            }
+        }
         List<Map> list = service.getTargetStudentList(param);
         return list;
     }

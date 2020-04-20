@@ -21,7 +21,7 @@ public class StudentProvider {
         if(!StringUtils.isEmpty(inf.get("account")))
             sql.append(" AND stu.account LIKE '%"+inf.get("account")+"%' ");
         if(!StringUtils.isEmpty(inf.get("name")))
-            sql.append(" AND stu.name LIKE '%"+inf.get("student_name")+"%' ");
+            sql.append(" AND stu.name LIKE '%"+inf.get("name")+"%' ");
         if(!StringUtils.isEmpty(inf.get("class_id")))
             sql.append(" AND stu.class_id = '"+inf.get("class_id")+"' ");
         if(!StringUtils.isEmpty(inf.get("college_id")))

@@ -1,6 +1,7 @@
 package com.oj.security;
 
 import com.oj.frameUtil.LogUtil;
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -21,14 +22,22 @@ public class OJHandleSecurity implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //通过Sesssion的方式校验当前请求是否已经具有登陆状态
-        if(StringUtils.isEmpty(request.getSession().getAttribute("user_id"))){
-            //若Session中key值为user_id的value为空，则进行拦截，并重定向到登陆界面
-            log.warn("Session验证未通过, " + LogUtil.requestLogger(request));
-            response.sendRedirect("/login/");
-            return false;
-        }else {
-            //若Session中key值为user_id的value不为空，则通过验证
-            log.warn("Session验证通过, " + LogUtil.requestLogger(request));
+        String Url = request.getRequestURI();
+        if(!Url.contains("/form/"))
+        {
+            if(StringUtils.isEmpty(request.getSession().getAttribute("user_id"))){
+                //若Session中key值为user_id的value为空，则进行拦截，并重定向到登陆界面
+                log.warn("Session验证未通过, " + LogUtil.requestLogger(request));
+                response.sendRedirect("/login/");
+                return false;
+            }else {
+                //若Session中key值为user_id的value不为空，则通过验证
+                log.warn("Session验证通过, " + LogUtil.requestLogger(request));
+                return true;
+            }
+        }
+        else
+        {
             return true;
         }
     }

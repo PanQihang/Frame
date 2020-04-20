@@ -19,7 +19,6 @@ function resetClassInfoDialog() {
     $("#myModal5 label.error").remove()
 }
 function queryClassInfo() {
-    //alert("come in here");
     $.ajax({
         type: "POST",
         url: "/classesMn/getClassMapList",

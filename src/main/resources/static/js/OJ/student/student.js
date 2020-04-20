@@ -17,6 +17,27 @@ function resetForm() {
     $(".form-horizontal select").val("");
     queryStudentInfo();
 }
+function getRole() {
+    $.ajax({
+        type: "POST",
+        url: "/classesMn/getRole",
+        dataType: "json",
+        success:function (result){
+            if(result.role=="1")
+            {
+                indexCollegeSelect();
+                role = 1;
+            }
+            else
+            {
+                role = 0;
+                document.getElementById("college").style.display="none";
+                document.getElementById("collegeB").style.display="none";
+                document.getElementById("selectCollege").style.display="none";
+            }
+        }
+    })
+}
 function resetStudentInfoDialog() {
     $("#myModal5 input").val("");
     $("#myModal5 select").val("");
@@ -123,7 +144,14 @@ function showEditStudent(id) {
                 "id" : id
             }),
             success:function (result){
-                indexClassNameSelect(result[0].college_id,'','dialogMajorName',result[0].class_id);
+                if(role==1)
+                {
+                    indexClassNameSelect(result[0].college_id,'','dialogMajorName',result[0].class_id);
+                }
+                else
+                {
+                    $("#dialogClassName").val(result[0].class_id)
+                }
                 $("#dialogMajorName").val(result[0].college_id)
                 $("#dialogStuAccount").val(result[0].account)
                 $("#dialogStudentName").val(result[0].student_name)
@@ -133,6 +161,22 @@ function showEditStudent(id) {
         $("#dialogStudentId").attr("readonly",true)
         $("#dialogTitle").html("添加用户")
     }
+}
+function indexCollegeSelect() {
+    $.ajax({
+        type: "POST",
+        url: "/classesMn/getCollegeSelectInfo",
+        dataType: "json",
+        success:function (result){
+            var roleSelectInfo = "";
+            for (var i=0; i<result.length; i++){
+                roleSelectInfo += "<option value='"+result[i].college_id+"'>"+result[i].name+"</option>"
+            }
+            $("#collegeName").append(roleSelectInfo);
+            $("#dialogMajorNameB").append(roleSelectInfo);
+            $("#dialogMajorName").append(roleSelectInfo);
+        }
+    })
 }
 function resetAddMoreStudentDialog(){
     $("#myModal5B select").val("");
@@ -145,34 +189,6 @@ function showAddMoreStudent(){
 }
 //新增或更新用户信息
 function saveOrUpdateStudentInfo() {
-    /*if($("#dialogStudentInfo").validate({
-        rules: {
-            dialogStuAccount: {
-                required: true,
-                length: 10
-            },
-            dialogStudentName: {
-                required: true,
-                maxlength: 5
-            },
-            dialogClassName: {
-                required: true
-            }
-        },
-        messages: {
-            dialogUserAccount: {
-                required: icon + "学号不能为空",
-                length: icon + "学号应为10位的整数"
-            },
-            dialogUserName: {
-                required: icon + "姓名不能为空",
-                equalTo: icon + "姓名最长为32"
-            },
-            dialogClassName: {
-                required: icon + "班级不能为空"
-            }
-        }
-    }).form()){*/
     var newStudentInf = {
         "id" : $("#dialogStudentId").val(),
         "account" : $("#dialogStuAccount").val(),
@@ -199,23 +215,6 @@ function saveOrUpdateStudentInfo() {
             }
         });
     /*}*/
-}
-//获取所有学院信息
-function indexCollegeNameSelect() {
-    $.ajax({
-        type: "POST",
-        url: "/classesMn/getCollegeSelectInfo",
-        dataType: "json",
-        success:function (result){
-            var roleSelectInfo = "";
-            for (var i=0; i<result.length; i++){
-                roleSelectInfo += "<option value='"+result[i].college_id+"'>"+result[i].name+"</option>"
-            }
-            $("#collegeName").append(roleSelectInfo);
-            $("#dialogMajorName").append(roleSelectInfo);
-            $("#dialogMajorNameB").append(roleSelectInfo);
-        }
-    })
 }
 //获取所有班级信息
 function indexClassNameSelect(id , t, p,v) {

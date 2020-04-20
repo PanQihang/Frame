@@ -1,30 +1,52 @@
 $(document).ready(function () {
+    loadLayerDate();
     getRole();
-    //getStatusInfo();
+    getStatusInfo();
     indexClassNameSelect();
 });
+function loadLayerDate() {
+    var startTime;
+    var endTime;
+
+    startTime = laydate.now();
+    endTime = laydate.now();
+    // $('#experStartTime').val(laydate.now(0, 'YYYY-MM-DD hh:mm:ss'));
+    // $('#experEndTime').val(laydate.now(7, 'YYYY-MM-DD hh:mm:ss'));
+
+    //日期范围限制
+    var start = {
+        elem: '#experStartTime',
+        format: 'YYYY-MM-DD hh:mm:ss',
+        // start:startTime,
+        // min: startTime, //设定最小日期为当前日期
+        // max: '2099-06-16 23:59:59', //最大日期
+        istime: true,
+        istoday: false,
+        choose: function (datas) {
+            end.min = datas; //开始日选好后，重置结束日的最小日期
+            end.start = datas //将结束日的初始值设定为开始日
+        }
+    };
+
+    var end = {
+        elem: '#experEndTime',
+        format: 'YYYY-MM-DD hh:mm:ss',
+        // start:endTime,
+        // min: startTime,
+        // max: '2099-06-16 23:59:59',
+        istime: true,
+        istoday: false,
+        choose: function (datas) {
+            start.max = datas; //结束日选好后，重置开始日的最大日期
+        }
+    };
+    laydate(start);
+    laydate(end);
+}
 var role = 0;
-var stateCNList = ['已提交,请等待…', //0
-    '<font color="green">Accepted</font>', //1
-    'PresentationError',//2 这个没用了
-    'WrongAnswer',//3 这个没用了
-    '<font color="red">RuntimeError</font>',//4
-    '<font color="orangered">TimeLimitExceed</font>',//5
-    '<font color="red">MemoryLimitExceed</font>',//6
-    '<font color="red">SystemCallError</font>',//7
-    'CompileError',//8
-    'SystemError',//9 		以上为数据库提供
-    '超时,到查看状态处查看',//10   		以下为异常错误
-    '含违规字符',//11
-    '无权提交',//12
-    '未知错误，联系管理员'//13
-    ]
-var laguateType = [
-    "未知语言类型", //0
-    "C++", //1
-    'C',//2
-    'Java',//3
-    'Python'//4
+var is_headache = [
+    "否", //0
+    "是", //1
 ]
 //重置form内的标签
 function resetForm() {
@@ -92,94 +114,77 @@ function removeOption(id){
     var obj=document.getElementById(id);
     obj.options.length=0;
 }
+function dateToStr(date) {
+    var s = new Date(date);
+    return s.getTime();
+}
 function getStatusInfo() {
-    var dataTable = $('#StatusInfoTable');
-    if ($.fn.dataTable.isDataTable(dataTable)) {
-        dataTable.DataTable().destroy();
-    }
-    dataTable.DataTable({
-        "searching" : false,
-        "serverSide": true,
-        "autoWidth": false,
-        "processing": true,
-        "ajax": {
-            url: "/submitMn/getSubmitStatusMaplist",
-            type: "POST",
-            data: {
-                "problem_id" : $('#problemId').val(),
-                "account" : $('#account').val(),
-                "submit_state" : $('#submit_state').val()
-            },
-        },
-        "bSort": false,
-        "columns": [{
-            "data": "problem_id"
-        }, {
-            "data": "name"
-        }, {
-            "data": "submit_state"
-        }, {
-            "data": "submit_language"
-        }, {
-            "data": "submit_time"
-        }, {
-            "data": "submit_memory"
-        }, {
-            "data": "submit_code_length"
-        }, {
-            "data": "submit_date"
-        }],
-        "columnDefs": [{
-            "render" : function(data, type, row) {
-                debugger
-                var a = "";
-                if(undefined != stateCNList[row.submit_state]){
-                    a = stateCNList[row.submit_state]
-                }
-                return a;
-            },
-            "targets" :2
-        },{
-            "render" : function(data, type, row) {
-                var a = "";
-                if(undefined != laguateType[row.submit_language]){
-                    a = laguateType[row.submit_language]
-                }
-                return a;
-            },
-            "targets" :3
-        },{
-            "render" : function(data, type, row) {
-                var a = "<span>"+row.submit_time+" ms</span>";
-                return a;
-            },
-            "targets" :4
-        },{
-            "render" : function(data, type, row) {
-                var a = "<span>"+row.submit_memory+" KB</span>";
-                return a;
-            },
-            "targets" :5
-        },{
-            "render" : function(data, type, row) {
-                var a = "<span>"+row.submit_code_length+" b</span>";
-                return a;
-            },
-            "targets" :6
-        }]
-    });
-
+    $.ajax({
+        type: "POST",
+        url: "/submitMn/getSubmitStatusMaplist",
+        dataType: "json",
+        contentType: "application/json;charset=UTF-8",
+        data:JSON.stringify({
+            "name" : $('#studentName').val(),
+            "account" : $('#account').val(),
+            "college_id" : $('#collegeName').val(),
+            "class_id" : $('#classId').val(),
+            "is_headache" : $('#is_headache').val(),
+            "start":dateToStr($("#experStartTime").val()),
+            "end":dateToStr($("#experEndTime").val()),
+        }),
+        success:function (result) {
+            var dataTable = $('#StatusInfoTable');
+            if ($.fn.dataTable.isDataTable(dataTable)) {
+                dataTable.DataTable().destroy();
+            }
+            dataTable.DataTable({
+                "serverSide": false,
+                "autoWidth" : false,
+                "bSort": false,
+                "data" : result,
+                "columns": [{
+                    "data": "form_id"
+                }, {
+                    "data": "student_name"
+                },{
+                    "data": "account"
+                }, {
+                    "data": "college_name"
+                }, {
+                    "data": "class_name"
+                }, {
+                    "data": "temperature"
+                }, {
+                    "data": "is_headache"
+                }, {
+                    "data": "create_time"
+                }],
+                "columnDefs": [{
+                    "render" : function(data, type, row) {
+                        var a = "";
+                        if(undefined != is_headache[row.is_headache]){
+                            a = is_headache[row.is_headache]
+                        }
+                        return a;
+                    },
+                    "targets" :6
+                },{
+                    "render" : function(data, type, row) {
+                        var a = "";
+                        a = format(row['create_time'])
+                        return a;
+                    },
+                    "targets" :7
+                }]
+            });
+        }
+    })
 }
 
-// function formatTime(time) {
-//     time = time.split(".")[0];
-//     time = time.replace("T", " ")
-//     return time;
-// }
-//function add0(m){return m<10?'0'+m:m }
 function format(time)
 {
-    return new Date(parseInt(time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+    return new Date(parseInt(time)).toLocaleString().replace(/:\d{1,2}$/,' ');
 }
 
 
