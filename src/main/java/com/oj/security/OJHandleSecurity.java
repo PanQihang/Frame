@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
  * @Description 自定义拦截器OJHandleSecurity
  */
 public class OJHandleSecurity implements HandlerInterceptor {
-
     private Logger log = LoggerFactory.getLogger(this.getClass());
     //实现preHandle方法
     @Override
@@ -41,5 +40,4 @@ public class OJHandleSecurity implements HandlerInterceptor {
             return true;
         }
     }
-
 }

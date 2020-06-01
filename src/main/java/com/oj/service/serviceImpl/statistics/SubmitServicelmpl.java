@@ -35,8 +35,6 @@ public class SubmitServicelmpl implements SubmitService{
         jqueryDataTableDto.setData(list);
         return jqueryDataTableDto;
     }*/
-
-
     public List<Map> getSubmitStatusMaplist(Map<String, String> param)  {
         //JqueryDataTableDto jqueryDataTableDto=new JqueryDataTableDto();
         List<Map> list = mapper.getSubmitStatusMaplist(param);
@@ -45,6 +43,12 @@ public class SubmitServicelmpl implements SubmitService{
         //jqueryDataTableDto.setRecordsTotal(total);
         //jqueryDataTableDto.setRecordsFiltered(filterTotal);
         //jqueryDataTableDto.setData(list);
+        return list;
+    }
+
+    @Override
+    public List<Map> getFeverMaplist(Map<String, String> param) {
+        List<Map> list = mapper.getFeverMaplist(param);
         return list;
     }
 

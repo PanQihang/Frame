@@ -76,7 +76,6 @@ function queryUserInfo() {
                         a += "<button type='button' class='btn btn-primary' onclick='showEditUser(\""+row.id+"\")' data-toggle='modal' data-target='#myModal5' title='编辑用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-pencil-square-o'></i>&nbsp;编辑</button>"
                         a += "<button type='button' class='btn btn-primary' onclick='deleteUser(\""+row.id+"\")' title='删除用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-user-times'></i>&nbsp;删除</button>"
                         a += "<button type='button' class='btn btn-primary' onclick='reSetPassord(\""+row.id+"\")' data-toggle='modal' data-target='#resetPassword' title='重置密码' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-refresh'></i>&nbsp;重置密码</button>"
-                        a += "<button type='button' class='btn btn-primary' onclick='courseList(\""+row.id+"\")' data-toggle='modal' data-target='#courseListDialog' title='课程列表' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;课程列表</button>"
                         return a;
                     },
                     "targets" :5
@@ -343,39 +342,6 @@ function saveNewPassword() {
             }
         })
     }
-}
-
-function courseList(id) {
-    $('#CLDuserId').val(id);
-    $('#CLDtbody').html("");
-    $.each(document.getElementsByName("CLDselect"),function (index,vaule,arr) {vaule.checked = false});
-    document.getElementsByName("btSelectAll")[0].checked = false;
-    $.ajax({
-        type: "POST",
-        url: "/userMn/getCourseList",
-        dataType: "json",
-        data: {
-            "id": id
-        },
-        success: function (result) {
-            var innerHtml = ''
-            var isSelectAll = true
-            for (i = 0; i < result.length; i++){
-                innerHtml += "<tr><td>"
-                if(result[i].admin_id == null){
-                    innerHtml += "<input name='CLDselect' onclick='checkSelectAll()' type='checkbox' value='"+result[i].id+"'>"
-                    isSelectAll = false
-                }else{
-                    innerHtml += "<input name='CLDselect' onclick='checkSelectAll()' type='checkbox' checked value='"+result[i].id+"'>"
-                }
-                innerHtml += "</td><td>"+result[i].name+"</td></tr>"
-            }
-            if(isSelectAll){
-                document.getElementsByName("btSelectAll")[0].checked = true
-            }
-            $('#CLDtbody').append(innerHtml)
-        }
-    });
 }
 
 //绑定全选按钮事件

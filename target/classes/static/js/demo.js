@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    var s = laydate.now(0, 'YYYY/MM/DD')+' 健康报备';
+    document.getElementById("head").innerHTML=s;
     indexCollegeSelect()
 });
 function indexCollegeSelect() {

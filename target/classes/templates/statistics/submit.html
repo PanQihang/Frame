@@ -91,7 +91,7 @@
                             <button onclick="resetForm()" type="button" class="btn btn-primary">
                                 重 置
                             </button>
-                            <button onclick="getStatusInfo()" type="button" class="btn btn-primary">
+                            <button onclick="getStatusInfo();getFeverInfo()" type="button" class="btn btn-primary">
                                 查 询
                             </button>
                         </div>
@@ -108,6 +108,34 @@
                 </div>
                 <div class="ibox-content">
                     <table id="StatusInfoTable"
+                           class="table table-striped table-bordered table-hover dataTables-example">
+                        <thead>
+                        <tr>
+                            <th width="12.5%">提交ID</th>
+                            <th width="12.5%">姓名</th>
+                            <th width="12.5%">学号</th>
+                            <th width="12.5%">学院</th>
+                            <th width="12.5%">班级</th>
+                            <th width="12.5%">体温</th>
+                            <th width="12.5%">是否发烧</th>
+                            <th width="12.5%">提交时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>发烧统计列表</h5>
+                </div>
+                <div class="ibox-content">
+                    <table id="FeverInfoTable"
                            class="table table-striped table-bordered table-hover dataTables-example">
                         <thead>
                         <tr>

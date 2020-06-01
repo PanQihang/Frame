@@ -2,6 +2,7 @@ $(document).ready(function () {
     loadLayerDate();
     getRole();
     getStatusInfo();
+    getFeverInfo();
     indexClassNameSelect();
 });
 function loadLayerDate() {
@@ -53,6 +54,7 @@ function resetForm() {
     $(".form-horizontal input").val("");
     $(".form-horizontal select").val("");
     getStatusInfo();
+    getFeverInfo();
 }
 function getRole() {
     $.ajax({
@@ -135,6 +137,69 @@ function getStatusInfo() {
         }),
         success:function (result) {
             var dataTable = $('#StatusInfoTable');
+            if ($.fn.dataTable.isDataTable(dataTable)) {
+                dataTable.DataTable().destroy();
+            }
+            dataTable.DataTable({
+                "serverSide": false,
+                "autoWidth" : false,
+                "bSort": false,
+                "data" : result,
+                "columns": [{
+                    "data": "form_id"
+                }, {
+                    "data": "student_name"
+                },{
+                    "data": "account"
+                }, {
+                    "data": "college_name"
+                }, {
+                    "data": "class_name"
+                }, {
+                    "data": "temperature"
+                }, {
+                    "data": "is_headache"
+                }, {
+                    "data": "create_time"
+                }],
+                "columnDefs": [{
+                    "render" : function(data, type, row) {
+                        var a = "";
+                        if(undefined != is_headache[row.is_headache]){
+                            a = is_headache[row.is_headache]
+                        }
+                        return a;
+                    },
+                    "targets" :6
+                },{
+                    "render" : function(data, type, row) {
+                        var a = "";
+                        a = format(row['create_time'])
+                        return a;
+                    },
+                    "targets" :7
+                }]
+            });
+        }
+    })
+}
+function getFeverInfo() {
+    $.ajax({
+        type: "POST",
+        url: "/submitMn/getFeverMaplist",
+        dataType: "json",
+        contentType: "application/json;charset=UTF-8",
+        data:JSON.stringify({
+            "name" : $('#studentName').val(),
+            "account" : $('#account').val(),
+            "college_id" : $('#collegeName').val(),
+            "class_id" : $('#classId').val(),
+            "is_headache" : $('#is_headache').val(),
+            "start":dateToStr($("#experStartTime").val()),
+            "end":dateToStr($("#experEndTime").val()),
+        }),
+        success:function (result) {
+            var dataTable = $('#FeverInfoTable');
             if ($.fn.dataTable.isDataTable(dataTable)) {
                 dataTable.DataTable().destroy();
             }

@@ -65,4 +65,21 @@ public class SubmitController {
         list = statisticsService.getSubmitStatusMaplist(param);
         return list;
     }
+
+    @RequestMapping("/getFeverMaplist")
+    @ResponseBody
+    public List<Map> getFeverMaplist(@RequestBody Map<String, String> param,HttpServletRequest request)
+    {
+        List<Map> list = null;
+        String college_id = request.getSession().getAttribute("user_college_id").toString();
+        if(param.get("college_id")==null||param.get("college_id").equals(""))
+        {
+            if(!college_id.equals("0"))
+            {
+                param.put("college_id",college_id);
+            }
+        }
+        list = statisticsService.getFeverMaplist(param);
+        return list;
+    }
 }

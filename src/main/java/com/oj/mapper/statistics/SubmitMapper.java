@@ -9,6 +9,9 @@ public interface SubmitMapper {
     //@Select("SELECT a.problem_id,b.name,a.submit_state,a.submit_language,a.submit_time,a.submit_memory,a.submit_code_length,a.submit_date FROM teach_submit_code as a,teach_students as b where a.user_id=b.id order by submit_date desc limit 100")
     @SelectProvider(type=SubmitProvider.class, method = "getQuerySql")
     public List<Map> getSubmitStatusMaplist(@Param("condition")Map<String, String> params);
+
+    @SelectProvider(type=SubmitProvider.class, method = "getFeverMaplist")
+    public List<Map> getFeverMaplist(@Param("condition")Map<String, String> params);
     // 查询总数
     @Select("SELECT COUNT(*) FROM teach_form AS a, teach_student AS b WHERE a.student_id = b.student_id")
     public int selectTotalCount();
